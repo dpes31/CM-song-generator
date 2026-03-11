@@ -220,7 +220,7 @@ no synth pads, no ambient wash, no lo-fi, no vocal distortion
                                 <div className="relative">
                                     <div className="relative">
                                         <input
-                                            type="url"
+                                            type="text"
                                             value={url}
                                             onChange={(e) => setUrl(e.target.value)}
                                             placeholder="브랜드 웹사이트 URL을 입력하세요 (예: https://www.drpepper.com/)"
@@ -239,7 +239,7 @@ no synth pads, no ambient wash, no lo-fi, no vocal distortion
                                             initial={{ height: 0, opacity: 0, y: -10 }}
                                             animate={{ height: "auto", opacity: 1, y: 0 }}
                                             exit={{ height: 0, opacity: 0, y: -10 }}
-                                            className="overflow-hidden border border-white/10 rounded-2xl bg-white/5"
+                                            className="border border-white/10 rounded-2xl bg-white/5 overflow-clip"
                                         >
                                             <div className="p-6 space-y-6">
                                                 {/* 기본 정보 */}
@@ -291,7 +291,7 @@ no synth pads, no ambient wash, no lo-fi, no vocal distortion
                                                         )}
                                                     </div>
 
-                                                    <label className="flex items-start gap-3 p-3 bg-black/20 border border-white/5 rounded-xl cursor-pointer hover:bg-black/40 transition-colors group">
+                                                    <label className="flex items-start gap-3 p-3 bg-black/20 border border-white/5 rounded-xl cursor-pointer hover:bg-black/40 transition-colors group touch-pan-y">
                                                         <div className="flex h-5 items-center">
                                                             <input
                                                                 type="checkbox"
