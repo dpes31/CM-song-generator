@@ -5,9 +5,6 @@
  * including Exponential Backoff for 429 limits, and Automatic Retries for 500/504 limits.
  */
 
-const SUNO_BASE_URL = process.env.SUNO_API_URL || 'https://api.suno.ai';
-const MAX_RETRIES = 3;
-
 /**
  * Initiates generation request (Phonetic Seeding or Final CM Song)
  */
