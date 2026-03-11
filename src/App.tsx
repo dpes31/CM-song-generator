@@ -291,7 +291,7 @@ no synth pads, no ambient wash, no lo-fi, no vocal distortion
                                                         )}
                                                     </div>
 
-                                                    <label className="flex items-start gap-3 p-3 bg-black/20 border border-white/5 rounded-xl cursor-pointer hover:bg-black/40 transition-colors group touch-pan-y">
+                                                    <label className="flex items-start gap-3 p-3 bg-black/20 border border-white/5 rounded-xl cursor-pointer hover:bg-black/40 transition-colors group">
                                                         <div className="flex h-5 items-center">
                                                             <input
                                                                 type="checkbox"
