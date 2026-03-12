@@ -84,9 +84,10 @@ const VOCAL_OPTIONS = [
 
 /** 가사 언어 */
 const LANGUAGE_OPTIONS = [
-    { id: 'ko', label: '🇰🇷 한국어' },
-    { id: 'en', label: '🇺🇸 영어' },
-    { id: 'mix', label: '🌐 혼합 (한+영)' },
+    { id: 'auto', label: '🤖 AI 자동', sub: '최적의 언어 선정' },
+    { id: 'ko', label: '🇰🇷 한국어', sub: '국내 대중성 특화' },
+    { id: 'en', label: '🇺🇸 영어', sub: '글로벌/세련미' },
+    { id: 'mix', label: '🌐 혼합', sub: '트렌디한 한+영' }
 ] as const;
 
 // ⎯⎯⎯⎯⎯ 재사용 UI 컴포넌트 ⎯⎯⎯⎯⎯
@@ -228,7 +229,6 @@ function App() {
     // 단어 수 계산 헬퍼 — .split(/\s+/)는 공백·탭·줄바꿈 기준으로 분리
     // Suno AI는 공백 구분 단어(token) 기준으로 80단어 제한
     const getWordCount = (text: string) => text.trim() ? text.trim().split(/\s+/).length : 0;
-    const getCharCount = (text: string) => text.replace(/\s/g, '').length; // 순수 글자 수
     const isOverWordLimit = getWordCount(fixedLyrics) > 80;
 
     // BPM 수치에 대한 한글 라벨
@@ -272,9 +272,14 @@ function App() {
     };
 
     // [04] 가사 언어 라벨 — 이모지 깨짐 방지를 위해 매핑 방식 사용
-    const getLangLabel = (): string => {
-        const langMap: Record<string, string> = { ko: '한국어', en: '영어', mix: '혼합 (한+영)' };
-        return langMap[language] || '한국어';
+    const getLangLabel = (id: string) => {
+        const labels: Record<string, string> = {
+            auto: 'AI 자동 (분석 후 최적 언어 선택)',
+            ko: '한국어',
+            en: '영어',
+            mix: '혼합 (한+영)'
+        };
+        return labels[id] || id;
     };
 
     const handleGenerate = async (e: React.FormEvent) => {
@@ -329,7 +334,7 @@ function App() {
                 const moodEng = getMoodEng();
                 const instrumentsEng = getInstrumentsEng();
                 const vocalEng = getVocalEng();
-                const langLabel = getLangLabel();
+                const langLabel = getLangLabel(language);
 
                 /**
                  * ──────────────────────────────────────────────
@@ -387,7 +392,7 @@ function App() {
 [STEP 1: 브랜드 DNA 분석 및 카피라이팅 전략 (내부 Blueprint)]
 제공된 데이터를 바탕으로 마케팅 12원형(Innocent, Jester, Creator 등) 중 1개를 스스로 매핑하십시오.
 - [카피라이팅 룰]:
-  ${language === 'ko' ? '한국어 가사: 4음보 구조와 대구법, 의성어/의태어를 활용하십시오. 단순 나열을 피할 것.' : language === 'en' ? '영어 가사: 라임(rhyme)과 리듬감 있는 음절 배치. 간결하고 임팩트 있는 표현을 사용할 것.' : '혼합 가사: 한국어 파트는 4음보 구조, 영어 파트는 라임 기반. 언어 전환 지점은 에너지 변곡점에 배치할 것.'}
+  ${language === 'auto' ? '분석된 브랜드 톤앤매너에 최적화된 작법을 적용하십시오 (한국어인 경우 4음보/대구법, 영어인 경우 라임 중점).' : language === 'ko' ? '한국어 가사: 4음보 구조와 대구법, 의성어/의태어를 활용하십시오. 단순 나열을 피할 것.' : language === 'en' ? '영어 가사: 라임(rhyme)과 리듬감 있는 음절 배치. 간결하고 임팩트 있는 표현을 사용할 것.' : '혼합 가사: 한국어 파트는 4음보 구조, 영어 파트는 라임 기반. 언어 전환 지점은 에너지 변곡점에 배치할 것.'}
 - 브랜드명/슬로건은 가장 에너지가 높은 [Chorus]에 자연스럽게 반복(Hook) 배치하십시오. 하이픈(-) 강제 사용은 금지합니다.
 
 [STEP 2: Suno V5 Style 박스 조립 (프론트 로딩 & 120자 제한)]
@@ -500,7 +505,7 @@ function App() {
                                 </button>
                                 <button type="button" onClick={() => setIsManualMode(true)}
                                     className={`flex-1 py-3 text-sm font-medium rounded-xl relative z-10 transition-colors ${isManualMode ? 'text-white' : 'text-gray-400 hover:text-white'}`}>
-                                    🔘 매뉴얼 모드 <span className="text-yellow-400 ml-1">✨Pro</span>
+                                    🔘 매뉴얼 모드 (Manual) <span className="text-yellow-400 ml-1">✨Pro</span>
                                     <span className="block text-xs font-light opacity-60 mt-0.5">맞춤형 제작</span>
                                 </button>
                             </div>
@@ -548,15 +553,19 @@ function App() {
                                             {isThemeAuto && <Check className="w-3.5 h-3.5" />}
                                             🤖 AI 자동
                                         </button>
-                                        <input type="text" value={theme} onChange={(e) => { setTheme(e.target.value); if (e.target.value.trim()) setIsThemeAuto(false); }}
-                                            placeholder="예: 남녀노소 누구나 좋아하는 새우깡"
-                                            className={`w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-purple-500/50 transition-all ${isThemeAuto ? 'opacity-40' : 'opacity-100'} transition-opacity`}
-                                        />
+                                        <div className="mt-2">
+                                            <input type="text" value={theme} 
+                                                onChange={(e) => { setTheme(e.target.value); if (e.target.value.trim()) setIsThemeAuto(false); }}
+                                                placeholder="예: 남녀노소 누구나 좋아하는 새우깡"
+                                                disabled={isThemeAuto}
+                                                className={`w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-purple-500/50 transition-all ${isThemeAuto ? 'opacity-40 select-none cursor-default' : 'opacity-100'}`}
+                                            />
+                                        </div>
                                     </div>
 
                                     {/* ② 필수 가사 + 가사 언어 */}
                                     <div className="space-y-3">
-                                        <SectionTitle num={2} title="필수 가사" subtitle="제품명 / 브랜드 / 슬로건 등 가사에 필수로 들어가야하는 내용을 적어주세요" />
+                                        <SectionTitle num={2} title="필수 가사" subtitle="제품명 / 브랜드 / 슬로건 등 가사에 필수로 들어가야 하는 내용을 적어주세요" />
                                         <button type="button" onClick={() => setIsSloganAuto(!isSloganAuto)}
                                             className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
                                                 isSloganAuto
@@ -566,11 +575,14 @@ function App() {
                                             {isSloganAuto && <Check className="w-3.5 h-3.5" />}
                                             🤖 AI 자동
                                         </button>
-                                        <input type="text" value={slogan} onChange={(e) => { setSlogan(e.target.value); if (e.target.value.trim()) setIsSloganAuto(false); }}
-                                            placeholder="예: 손이 가요 손이가 새우깡에 손이 가요"
-                                            className={`w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-purple-500/50 transition-all ${isSloganAuto ? 'opacity-40' : 'opacity-100'} transition-opacity`}
-                                            disabled={inputMode === 'fixed'}
-                                        />
+                                        <div className="mt-2">
+                                            <input type="text" value={slogan} 
+                                                onChange={(e) => { setSlogan(e.target.value); if (e.target.value.trim()) setIsSloganAuto(false); }}
+                                                placeholder="예: 손이 가요 손이가 새우깡에 손이 가요"
+                                                disabled={isSloganAuto || inputMode === 'fixed'}
+                                                className={`w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-purple-500/50 transition-all ${(isSloganAuto || inputMode === 'fixed') ? 'opacity-40 select-none cursor-default' : 'opacity-100'}`}
+                                            />
+                                        </div>
                                         <div className="pt-2">
                                             <label className="block text-xs font-medium text-gray-400 mb-2 ml-1">가사 언어</label>
                                             <ChipGroup
