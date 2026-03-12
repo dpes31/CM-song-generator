@@ -466,67 +466,68 @@ function App() {
     };
 
     return (
-        <div className="min-h-screen bg-black text-white relative overflow-x-clip font-sans">
-            {/* Background Gradients */}
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/30 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/30 rounded-full blur-[120px] pointer-events-none" />
+        <div className="min-h-screen bg-[#030303] text-white relative overflow-x-clip font-sans selection:bg-purple-500/30">
+            {/* 시안 3 메쉬 그라데이션 배경 */}
+            <div className="mesh-gradient" />
 
             <main className="relative z-10 container mx-auto px-4 py-12 min-h-screen flex flex-col pt-24">
                 {/* Header */}
                 <div className="text-center mb-16 animate-fade-in-up">
-                    <div className="inline-flex items-center justify-center p-3 glass rounded-full mb-6">
-                        <Music className="w-8 h-8 text-blue-400" />
+                    <div className="inline-flex items-center justify-center p-4 glass-premium rounded-3xl mb-8 shadow-2xl">
+                        <Music className="w-10 h-10 text-purple-400" />
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-white">
+                    <h1 className="text-6xl md:text-8xl font-bold tracking-tight mb-8 text-gradient">
                         CM송 제너레이터
                     </h1>
-                    <p className="text-xl text-gray-400 max-w-2xl mx-auto font-light tracking-wide">
-                        브랜드의 DNA를 AI가 읽고, 최적의 상업용 음원을 즉시 창조합니다.
+                    <p className="text-xl md:text-2xl text-white/50 max-w-2xl mx-auto font-light tracking-wide leading-relaxed">
+                        브랜드의 DNA를 AI가 읽고,<br /> 최적의 상업용 음원을 즉시 창조합니다.
                     </p>
                 </div>
 
-                {/* Input Card */}
+                {/* Input Card Container */}
                 <div className="max-w-3xl mx-auto w-full animate-fade-in-up animation-delay-200">
-                    <form onSubmit={handleGenerate} className="glass-panel rounded-3xl p-8 relative">
+                    <form onSubmit={handleGenerate} className="glass-card">
                         <div className="absolute inset-0 bg-gradient-to-b from-white/[0.05] to-transparent pointer-events-none rounded-3xl" />
 
                         <div className="relative z-10 flex flex-col gap-6">
 
-                            {/* 트랙 스위치 — CSS transition */}
-                            <div className="flex bg-black/40 border border-white/10 rounded-2xl p-1.5 relative w-full overflow-hidden">
+                            {/* 트랙 스위치 — 시안 3 프리미엄 스타일 */}
+                            <div className="flex bg-white/5 border border-white/10 rounded-2xl p-1.5 relative w-full overflow-hidden shadow-inner">
                                 <div
-                                    className="absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-gradient-to-r from-blue-600/30 to-purple-600/30 rounded-xl transition-[left] duration-300 ease-out"
+                                    className="absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] bg-gradient-to-r from-purple-600/40 to-blue-600/40 border border-white/20 rounded-xl transition-[left] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_0_20px_rgba(140,37,244,0.3)]"
                                     style={{ left: isManualMode ? 'calc(50% + 3px)' : '6px' }}
                                 />
                                 <button type="button" onClick={() => setIsManualMode(false)}
-                                    className={`flex-1 py-3 text-sm font-medium rounded-xl relative z-10 transition-colors ${!isManualMode ? 'text-white' : 'text-gray-400 hover:text-white'}`}>
+                                    className={`flex-1 py-3.5 text-sm font-medium rounded-xl relative z-10 transition-all duration-300 ${!isManualMode ? 'text-white' : 'text-white/40 hover:text-white/70'}`}>
                                     🔘 오토 모드 (Auto)
-                                    <span className="block text-xs font-light opacity-60 mt-0.5">URL 기반 자동 기획</span>
+                                    <span className="block text-[10px] font-light opacity-50 mt-1 uppercase tracking-widest">URL Analysis</span>
                                 </button>
                                 <button type="button" onClick={() => setIsManualMode(true)}
-                                    className={`flex-1 py-3 text-sm font-medium rounded-xl relative z-10 transition-colors ${isManualMode ? 'text-white' : 'text-gray-400 hover:text-white'}`}>
+                                    className={`flex-1 py-3.5 text-sm font-medium rounded-xl relative z-10 transition-all duration-300 ${isManualMode ? 'text-white' : 'text-white/40 hover:text-white/70'}`}>
                                     🔘 매뉴얼 모드 (Manual) <span className="text-yellow-400 ml-1">✨Pro</span>
-                                    <span className="block text-xs font-light opacity-60 mt-0.5">맞춤형 제작</span>
+                                    <span className="block text-[10px] font-light opacity-50 mt-1 uppercase tracking-widest">맞춤형 제작</span>
                                 </button>
                             </div>
 
-                            {/* [01] 브랜드/제품명 입력 (오토/매뉴얼 공통) */}
-                            <div className="relative">
+                            {/* [01] 브랜드/제품명 입력 */}
+                            <div className="group relative">
                                 <input type="text" value={brandName} onChange={(e) => setBrandName(e.target.value)}
                                     placeholder="브랜드 또는 제품명 (예: 새우깡, 닥터페퍼)"
-                                    className="w-full bg-white/5 border border-white/20 rounded-2xl px-5 py-4 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all font-light"
+                                    className="w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 text-lg text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all font-light group-hover:bg-white/[0.05]"
                                 />
+                                <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent scale-x-0 group-focus-within:scale-x-100 transition-transform duration-500" />
                             </div>
 
                             {/* URL 입력 */}
-                            <div className="relative">
+                            <div className="group relative">
                                 <input type="text" value={url} onChange={(e) => setUrl(e.target.value)}
                                     placeholder="브랜드 웹사이트 URL (예: www.drpepper.com)"
-                                    className={`w-full bg-white/5 border border-white/20 rounded-2xl px-5 py-4 pl-12 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all font-light ${!isManualMode ? 'border-blue-500/30 ring-1 ring-blue-500/20' : ''}`}
+                                    className={`w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 pl-14 text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-light group-hover:bg-white/[0.05] ${!isManualMode ? 'border-blue-500/30 ring-1 ring-blue-500/20' : ''}`}
                                     required={!isManualMode}
                                 />
-                                <Link className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                {isManualMode && <p className="text-xs text-gray-500 mt-2 px-2">* 매뉴얼 모드에서는 URL 입력이 선택 사항입니다.</p>}
+                                <Link className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30 group-focus-within:text-blue-400 transition-colors" />
+                                <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent scale-x-0 group-focus-within:scale-x-100 transition-transform duration-500" />
+                                {isManualMode && <p className="text-[11px] text-white/30 mt-3 px-2 tracking-tight italic">* 매뉴얼 모드에서는 URL 입력이 선택 사항입니다.</p>}
                             </div>
 
                             {/* [03] 오토 모드: 가사 언어 선택 (매뉴얼 모드에서는 내부 섹션에 포함) */}
@@ -538,22 +539,24 @@ function App() {
                             </div>
 
                             {/* ═══════════ 매뉴얼 모드: 6단계 Chip UI ═══════════ */}
-                            <div className={`transition-all duration-500 ease-in-out ${isManualMode ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-                                <div className="border border-white/10 rounded-2xl bg-white/5 p-6 space-y-8">
+                            <div className={`transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isManualMode ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                                <div className="space-y-10 py-4">
 
                                     {/* ① CM송 테마 */}
-                                    <div className="space-y-3">
+                                    <div className="space-y-4">
                                         <SectionTitle num={1} title="CM송 테마 (주제)" subtitle="AI가 곡의 전체 방향성과 가사 뉘앙스를 잡는 뼈대입니다" />
-                                        <button type="button" onClick={() => setIsThemeAuto(!isThemeAuto)}
-                                            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                                                isThemeAuto
-                                                    ? 'bg-purple-500/30 text-white border border-purple-400/50 ring-1 ring-purple-400/20'
-                                                    : 'bg-black/30 text-gray-300 border border-white/10 hover:bg-white/10 hover:text-white'
-                                            }`}>
-                                            {isThemeAuto && <Check className="w-3.5 h-3.5" />}
-                                            🤖 AI 자동
-                                        </button>
-                                        <div className="mt-2">
+                                        <div className="flex flex-wrap gap-3">
+                                            <button type="button" onClick={() => setIsThemeAuto(!isThemeAuto)}
+                                                className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                                                    isThemeAuto
+                                                        ? 'bg-purple-600/40 text-white border border-purple-400/50 shadow-[0_0_15px_rgba(140,37,244,0.4)]'
+                                                        : 'bg-white/5 text-white/40 border border-white/10 hover:bg-white/10 hover:text-white/80'
+                                                }`}>
+                                                {isThemeAuto && <Check className="w-3.5 h-3.5" />}
+                                                🤖 AI 자동
+                                            </button>
+                                        </div>
+                                        <div className="mt-2 group relative">
                                             <input type="text" value={theme} 
                                                 onChange={(e) => { setTheme(e.target.value); if (e.target.value.trim()) setIsThemeAuto(false); }}
                                                 placeholder="예: 남녀노소 누구나 좋아하는 새우깡"

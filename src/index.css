@@ -1,92 +1,102 @@
 @import "tailwindcss";
 @import "tailwindcss/utilities";
 
-@theme {
-  --color-background: #000000;
-  --color-foreground: #ffffff;
-  --color-primary: #3b82f6;
-  --color-primary-foreground: #ffffff;
+:root {
+  --mesh-bg: #030303;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
-@layer base {
-  body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    overflow-x: hidden;
-    @apply antialiased;
-  }
+body {
+  background-color: var(--mesh-bg);
+  color: #ffffff;
+  margin: 0;
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* iOS Safari Scroll Fix — touch-action 정리 */
-textarea,
-input,
-select,
-button,
-label {
+/* Mesh Gradient Background */
+.mesh-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: radial-gradient(circle at 20% 20%, rgba(140, 37, 244, 0.12) 0%, transparent 40%),
+              radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+              radial-gradient(circle at 50% 80%, rgba(244, 63, 94, 0.08) 0%, transparent 40%);
+  filter: blur(60px);
+  animation: mesh-float 25s ease-in-out infinite alternate;
+}
+
+@keyframes mesh-float {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+/* Glassmorphism Refined */
+.glass-premium {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-premium:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* iOS Safari Scroll Fix */
+textarea, input, select, button, label {
   touch-action: manipulation;
 }
 
-/* ──────────────────────────────────────────────
-   [V6.0 Phase 1] CSS 애니메이션 (Framer Motion 교체)
-   스크롤 버그 근본 원인(spring + overflow-hidden) 제거
-   ────────────────────────────────────────────── */
+/* 텍스트 그라데이션 */
+.text-gradient {
+  background: linear-gradient(to right, #60a5fa, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
-/* 페이드 + 위로 올라오는 진입 애니메이션 */
+/* 애니메이션 */
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* 단순 페이드인 (모달 백드롭 등) */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* 스케일인 (모달 카드) */
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.8s ease-out both;
+  animation: fadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.3s ease-out both;
+.animation-delay-200 { animation-delay: 200ms; }
+
+/* 공통 카드 스타일 */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+  border-radius: 2.5rem;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.animate-scale-in {
-  animation: scaleIn 0.3s ease-out both;
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.04), transparent);
+  pointer-events: none;
 }
 
-/* 진입 딜레이 유틸리티 (Input Card 등 순차 등장) */
-.animation-delay-200 {
-  animation-delay: 200ms;
-}
-
-.animation-delay-400 {
-  animation-delay: 400ms;
-}
-
-/* Glassmorphism utilities */
-.glass {
-  @apply bg-white/10 backdrop-blur-md border border-white/20 shadow-xl;
-}
-
-.glass-panel {
-  @apply bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl;
-}
+/* 구버전 클래스 호환 */
+.glass { border-radius: 9999px; background: var(--glass-bg); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); }
+.glass-panel { background: var(--glass-bg); backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: 1.5rem; }
