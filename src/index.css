@@ -12,11 +12,12 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    overflow-x: hidden;
     @apply antialiased;
   }
 }
 
-/* iOS Safari Scroll Fix */
+/* iOS Safari Scroll Fix — touch-action 정리 */
 textarea,
 input,
 select,
@@ -25,8 +26,60 @@ label {
   touch-action: manipulation;
 }
 
-.touch-scroll-fix {
-  touch-action: pan-y pinch-zoom;
+/* ──────────────────────────────────────────────
+   [V6.0 Phase 1] CSS 애니메이션 (Framer Motion 교체)
+   스크롤 버그 근본 원인(spring + overflow-hidden) 제거
+   ────────────────────────────────────────────── */
+
+/* 페이드 + 위로 올라오는 진입 애니메이션 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 단순 페이드인 (모달 백드롭 등) */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 스케일인 (모달 카드) */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out both;
+}
+
+/* 진입 딜레이 유틸리티 (Input Card 등 순차 등장) */
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+
+.animation-delay-400 {
+  animation-delay: 400ms;
 }
 
 /* Glassmorphism utilities */
