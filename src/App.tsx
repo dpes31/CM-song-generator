@@ -346,106 +346,109 @@ function App() {
                  * ──────────────────────────────────────────────
                  */
 
-                // [04] 입력 모드별 데이터 블록 — 미입력 항목 생략 방식
+                // [V5.3] 입력 데이터 블록 조립 —Anti-Gravity V5.2 필드명 준수
                 const buildDataLines = (): string => {
                     const lines: string[] = [];
                     lines.push(`- 브랜드/제품명: ${brandName}`);
                     if (url.trim()) lines.push(`- 브랜드 웹사이트: ${url}`);
 
                     if (isManualMode) {
-                        // 매뉴얼 모드: 각 항목이 AI 자동이면 'AI 자동 추천'으로 표기
                         lines.push(`- CM송 테마: ${isThemeAuto ? 'AI 자동 추천' : (theme.trim() || 'AI 자동 추천')}`);
-                        lines.push(`- 필수 가사: ${isSloganAuto ? 'AI 자동 추천' : (slogan.trim() || 'AI 자동 추천')}`);
+                        lines.push(`- 필수 포함 슬로건: ${isSloganAuto ? 'AI 자동 추천' : (slogan.trim() || 'AI 자동 추천')}`);
                         lines.push(`- 가사 언어: ${langLabel}`);
                         lines.push(`- 장르 및 스타일: ${genreLabel}`);
                         lines.push(`- 전반적인 무드: ${selectedMood === 'auto' ? 'AI 자동 추천' : (moodEng || 'AI 자동 추천')}`);
                         lines.push(`- 악기 구성: ${isInstrumentsAuto ? 'AI 자동 추천' : instrumentsEng}`);
-                        lines.push(`- 템포(BPM): ${isTempoAuto ? 'AI가 곡 분위기에 맞게 자동 결정' : `${tempo} BPM`}`);
+                        lines.push(`- 템포(BPM): ${isTempoAuto ? 'AI 자동 결정' : `${tempo} BPM`}`);
                         lines.push(`- 보컬 상세: ${selectedVocal === 'auto' ? 'AI 자동 추천' : (vocalEng || 'AI 자동 추천')}`);
                         if (inputMode === 'idea') {
-                            lines.push(`- 입력 모드: [옵션 A - 아이디어 모드]: AI가 위 데이터를 바탕으로 전체 가사 창작${(!isSloganAuto && slogan.trim()) ? ' (단, 필수 가사는 코러스에 100% 반영)' : ''}`);
+                            lines.push(`- 입력 모드: [옵션 A - 아이디어 모드] (AI가 데이터 기반 전체 창작)`);
                         } else {
-                            lines.push(`- 입력 모드: [옵션 B - 가사 고정 모드]: 사용자 확정 가사를 100% 훼손 없이 그대로 사용`);
+                            lines.push(`- 입력 모드: [옵션 B - 가사 고정 모드] (사용자 확정 가사 100% 사용)`);
                             lines.push(`- 확정 가사: "${fixedLyrics}"`);
                         }
                     } else {
-                        // 오토 모드: 모든 세부 필드를 AI 자동 추천으로 기재
                         lines.push(`- 가사 언어: ${langLabel}`);
-                        lines.push(`- 세부 장르: AI 자동 추천`);
+                        lines.push(`- 장르 및 스타일: AI 자동 추천`);
                         lines.push(`- 전반적인 무드: AI 자동 추천`);
                         lines.push(`- 악기 구성: AI 자동 추천`);
-                        lines.push(`- 템포(BPM): AI가 곡 분위기에 맞게 자동 결정`);
+                        lines.push(`- 템포(BPM): AI 자동 결정`);
                         lines.push(`- 보컬 상세: AI 자동 추천`);
-                        lines.push(`- 입력 모드: [옵션 A - 아이디어 모드]: AI가 브랜드 에센스를 분석해 전체 가사 창작`);
+                        lines.push(`- 입력 모드: [옵션 A - 아이디어 모드] (URL 기반 AI 창작)`);
                     }
                     return lines.join('\n');
                 };
 
                 const inputDataBlock = buildDataLines();
 
-                const masterPrompt = `당신은 세계 최고의 B2C 상업용 소닉 브랜딩(Sonic Branding) 디렉터이자 Suno V5 시스템 아키텍트입니다.
-사용자가 UI에서 선택한 아래 【사용자 입력 데이터】를 분석하여, 15~30초 분량의 소비자에게 강력하게 후킹되는 상업용 CM송(Jingle) 페이로드를 조립하십시오.
+                const masterPrompt = `당신은 세계 최고의 B2B 상업용 소닉 브랜딩(Sonic Branding) 디렉터이자, 수석 마케팅 카피라이터, 그리고 Suno V5 시스템 아키텍트입니다.
+사용자가 UI에서 선택한 아래 【사용자 입력 데이터】를 분석하여, 단 15~30초 만에 소비자의 뇌리에 브랜드와 핵심 메시지를 각인시키는 상업용 CM송(Jingle) 페이로드를 조립하십시오.
 
-【사용자 입력 데이터】 ${inputDataBlock}
+【사용자 입력 데이터】 
+${inputDataBlock}
 
 ---
-[STEP 1: 브랜드 DNA 분석 및 카피라이팅 전략 (내부 Blueprint)]
-제공된 데이터를 바탕으로 마케팅 12원형(Innocent, Jester, Creator 등) 중 1개를 스스로 매핑하십시오.
-- [카피라이팅 룰]:
-  ${language === 'auto' ? '분석된 브랜드 톤앤매너에 최적화된 작법을 적용하십시오 (한국어인 경우 4음보/대구법, 영어인 경우 라임 중점).' : language === 'ko' ? '한국어 가사: 4음보 구조와 대구법, 의성어/의태어를 활용하십시오. 단순 나열을 피할 것.' : language === 'en' ? '영어 가사: 라임(rhyme)과 리듬감 있는 음절 배치. 간결하고 임팩트 있는 표현을 사용할 것.' : '혼합 가사: 한국어 파트는 4음보 구조, 영어 파트는 라임 기반. 언어 전환 지점은 에너지 변곡점에 배치할 것.'}
-- 브랜드명/슬로건은 가장 에너지가 높은 [Chorus]에 자연스럽게 반복(Hook) 배치하십시오. 하이픈(-) 강제 사용은 금지합니다.
+[STEP 1: 브랜드 DNA 분석, 킬러 '키카피(Key Copy)' 발명 및 전개 로직]
+제공된 데이터를 바탕으로 마케팅 12원형 중 1개를 내부적으로 매핑하고, 소비자의 뇌리에 영원히 박힐 단 1~2줄의 강력한 **'키카피(Key Copy)'**를 먼저 발명하십시오. 
+이후, 제품/서비스의 산업군을 판별하여 아래 [산업별 가사 전개 3대 공식] 중 가장 적합한 1개를 선택해 곡 전체(약 40~60단어 분량)를 꽉 채워 작성하십시오. (Suno가 불필요한 간주를 넣지 못하도록 보컬 분량을 충분히 확보할 것)
 
-[STEP 2: Suno V5 Style 박스 조립 (프론트 로딩 & 120자 제한)]
-사용자가 선택한 장르, 무드, 악기, 템포, 보컬 데이터를 영문으로 완벽히 번역하여 Style 태그를 조합하십시오.
-- 공식(Front-loading): [Genre] + [Mood] + [BPM] + [2~3 Key Instruments] + [Vocal Persona]
-- 악기 구성이 3개를 초과하지 않도록 압축하십시오 (음질 깨짐 방지).
-- 예시: City Pop, 120 BPM, uplifting, bright synth and slap bass, airy female vocal
+* [공식 1. F&B/소비재 (감각적 변주 반복형)]: 식욕 자극 및 행동 유도가 목적. "오른손으로 비비고~ 왼손으로 비비고~" 처럼 구체적 행동 지시나 의성어/의태어를 적극 활용하고, 핵심 키카피를 단어만 살짝 바꿔 극단적으로 반복할 것.
+* [공식 2. 플랫폼/서비스 (상황 제시 및 해결형)]: TPO 공감대 형성이 목적. "여름이니까~ 아이스커피", "퇴근이니까~ 아이스커피" 처럼 일상의 특정 상황이나 질문을 변주하며 던지고, 브랜드를 명쾌한 해결책으로 반복 제시할 것.
+* [공식 3. 금융/기업PR/헬스케어 (신뢰 서사형)]: 심리적 안정감과 신뢰 구축이 목적. 무의미한 훅 반복을 피하고, "아이 손 어른 손, 자꾸만 손이 가" 처럼 안정적인 4음보(3·4조, 4·4조) 구조와 대구법을 사용하여 따라 부르기 쉬운 서사를 전개할 것.
 
-[STEP 3: 징글(Jingle) 구조 강제 조립 (Suno V5 Architecture)]
-불필요한 전주(Intro)를 없애기 위해 가사 최상단에 반드시 아래 지시어를 넣으십시오.
+★[발음 교정 필수 룰]: 숫자, 기호, 특수 브랜드명은 절대 아라비아 숫자나 기호 그대로 쓰지 마십시오. Suno 엔진이 오독하지 않도록, 반드시 '문맥에 맞는 가장 자연스러운 한국어 발음'으로 완벽히 풀어서 한글로만 작성하십시오. (예: 23가지 -> 스물세 가지 / 1000만 고객 -> 천만 고객 / 100% -> 백 퍼센트)
+★[추임새 필수 룰]: 괄호 ( )를 활용한 백보컬/추임새를 반드시 넣어 다채로운 리듬을 만들 것.
+
+[STEP 2: Suno V5 Style 박스 조립 (보컬 전달력 극대화)]
+사용자가 선택한 데이터를 영문으로 번역하여 120자 이내의 Style 태그를 조합하십시오.
+- 공식: [Genre] + [Mood] + [BPM] + [2~3 Key Instruments] + [Vocal Persona] + vocal-forward mix, clear polished vocals
+- ★필수 추가: 가사가 연주에 묻히지 않도록 반드시 끝에 **vocal-forward mix, clear polished vocals** 를 추가하여 보컬을 최전면에 배치하십시오.
+
+[STEP 3: 징글(Extreme Jingle) 구조 강제 조립 및 길이 30초 통제]
+불필요한 인트로(Intro) 연주를 완전히 삭제하고, 시작하자마자 0.1초 만에 무반주 또는 강력한 훅으로 브랜드명과 키카피를 때려 박으십시오. 곡이 30초 내에 강제 종료되도록 마지막에 Kill Switch 콤보 태그를 반드시 사용하십시오.
+가사 최상단에 반드시 아래 지시어를 넣어 연주 시간을 원천 차단하십시오.
 [No Instrumental Breaks]
-[Start immediately with full instrumental and vocals]
+[Start immediately with Acapella Hook]
 
-(구조 템플릿 - 전체 가사 60~80단어 이내)
-[Intro: under 2 seconds, punchy]
-[Verse 1: (무드 지시어 영문 삽입)]
-(조건에 맞는 가사)
-[Pre-Chorus: Build-Up]
-[Energy: Explosive]
-[Chorus: Catchy Hook, (보컬 창법 지시어 영문 삽입)]
-(필수 슬로건이 포함된 강력한 훅 2줄)!
-[Outro: punchy finish]
+(구조 템플릿)
+[Acapella Hook: (보컬 창법 지시어)] 
+(STEP 1에서 발명한 '키카피'를 무반주나 최소한의 비트로 뚜렷하게 시작. 괄호 추임새 필수)
+[Heavy Drop]
+(선택된 산업별 공식에 맞춰 키카피와 상황/감각을 변주하며 에너지가 터지는 구간)
+[Bridge: Rhythm change]
+(잠깐 분위기를 환기하는 1줄)
+[Final Chorus: Explosive]
+(키카피 무한 반복 및 폭발적인 브랜드명 샤우팅)!
+[Outro: Tagline, short fade]
+(브랜드 슬로건 1줄 마무리)
+[Stop]
 [End]
 
-[STEP 4: AI 창의력(Sliders) 동적 할당 및 최종 결과물 출력]
+[STEP 4: AI 창의력 동적 할당 및 최종 결과물 출력 (★마크다운 적용★)]
 선택된 장르에 따라 Weirdness(15~50)와 Style Influence(60~90) 값을 동적으로 계산하십시오.
-(예: 클래식/기업PR은 보수적으로, 하이퍼팝/틱톡은 파격적으로)
-
-<AI 창의력 동적 제어 가이드>
-- 감성/품격 (럭셔리, 금융, 기업PR, IT 등): Weirdness 15~20 / Style Influence 85~90
-- 대중/경쾌 (F&B, 뷰티, 소매, K-Pop 등): Weirdness 30 / Style Influence 70
-- 숏폼/바이럴 특화 (밈, Z세대, 폰크, 하이퍼팝 등): Weirdness 45~50 / Style Influence 60
-
-결과물은 사용자가 Suno.com 에 그대로 복사/붙여넣기 할 수 있도록 마크다운 없이 순수 텍스트로만 출력하십시오.
-각 섹션 구분은 ■ 기호로 시작하십시오.
+사용자가 마우스 클릭 한 번으로 쉽게 복사할 수 있도록, 입력해야 할 데이터들은 반드시 **마크다운 코드 블록(\`\`\`text) 안**에 작성하여 출력하십시오.
 
 ■ 브랜드 분석 요약 (Blueprint):
-(도출된 12원형, 카피라이팅 전략 요약, 할당된 슬라이더 수치)
-
-■ CM송 타이틀 제안:
-(광고 크리에이티브 컨셉처럼 10자 이내 명사형 타이틀 3개를 제안. 예: "청량한 약속", "손끝의 쾌감", "에너지 폭발")
+(도출된 카피라이팅 전략, 타깃 분석, 적용된 산업별 가사 전개 공식, 발음 교정 내역, 할당된 슬라이더 수치 요약)
 
 ■ [Lyrics] 칸 입력용:
-(STEP 3에서 완성된 [Start immediately...] 태그가 포함된 가사 원본)
+\`\`\`text
+(STEP 3에서 완성된 태그가 포함된 가사 원본)
+\`\`\`
 
 ■ [Style of Music] 칸 입력용:
+\`\`\`text
 (STEP 2에서 조합된 영문 태그)
+\`\`\`
 
-■ [More Options] 설정 가이드:
-- Exclude Styles: no synth pads, no ambient wash, no lo-fi, no vocal distortion, no long instrumental
-- Weirdness: (계산된 수치)
-- Style Influence: (계산된 수치)
-- Make Instrumental: 꺼짐 (Off)
+■ [More Options] 설정 가이드 (수동 설정):
+1. Exclude Styles (아래 내용 복사):
+\`\`\`text
+no synth pads, no ambient wash, no lo-fi, no vocal distortion, no long instrumental
+\`\`\`
+2. Weirdness: (계산된 수치) 설정
+3. Style Influence: (계산된 수치) 설정
+4. Make Instrumental: 꺼짐 (Off) 확인
 ---`;
 
                 setGeneratedBrandData({
