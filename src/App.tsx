@@ -381,7 +381,7 @@ function App() {
 
                 const inputDataBlock = buildDataLines();
 
-                const masterPrompt = `당신은 세계 최고의 B2B 상업용 소닉 브랜딩(Sonic Branding) 디렉터이자, 수석 마케팅 카피라이터, 그리고 Suno V5 시스템 아키텍트입니다.
+                const masterPrompt = `당신은 세계 최고의 B2C 상업용 소닉 브랜딩(Sonic Branding) 디렉터이자, 수석 마케팅 카피라이터, 그리고 Suno V5 시스템 아키텍트입니다.
 사용자가 UI에서 선택한 아래 【사용자 입력 데이터】를 분석하여, 단 15~30초 만에 소비자의 뇌리에 브랜드와 핵심 메시지를 각인시키는 상업용 CM송(Jingle) 페이로드를 조립하십시오.
 
 【사용자 입력 데이터】 
